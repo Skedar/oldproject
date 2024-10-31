@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="None">
+        
+        
+        <link rel="shortcut icon" href="img/favicon.ico">
+        <title>3D Metri</title>
+        <link href="css/bootstrap-custom.min.css" rel="stylesheet">
+        <link href="css/font-awesome.min.css" rel="stylesheet">
+        <link href="css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+        <script src="js/jquery-1.10.2.min.js" defer></script>
+        <script src="js/bootstrap-3.0.3.min.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script> 
+    </head>
+
+    <body class="homepage">
+
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+            <div class="container">
+
+                <!-- Collapsed navigation -->
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="index.html">3D Metri</a>
+                </div>
+
+                <!-- Expanded navigation -->
+                <div class="navbar-collapse collapse">
+
+                    <ul class="nav navbar-nav navbar-right">
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+                <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="main active"><a href="#3d-metri">3D Metri</a></li>
+            <li><a href="#3d-printing-instant-quote">3D Printing Instant Quote</a></li>
+        <li class="main "><a href="#overview">Overview</a></li>
+        <li class="main "><a href="#prerequisites">Prerequisites</a></li>
+            <li><a href="#what-is-amazon-web-services-aws">What is Amazon Web Services (AWS) ?</a></li>
+        <li class="main "><a href="#installation">Installation</a></li>
+        <li class="main "><a href="#customization">Customization</a></li>
+        <li class="main "><a href="#example-of-an-order-email">Example of an Order Email</a></li>
+        <li class="main "><a href="#faq">FAQ</a></li>
+            <li><a href="#who-is-this-html-web-app-for">Who is this HTML Web APP for?</a></li>
+            <li><a href="#why-it-is-important-have-an-instance-quoting-engine">Why it is important have an instance quoting engine?</a></li>
+    </ul>
+</div></div>
+                <div class="col-md-9" role="main">
+
+<h1 id="3d-metri">3D Metri</h1>
+<h2 id="3d-printing-instant-quote">3D Printing Instant Quote</h2>
+<p><a href="http://3dmetri.com">3D Metri Demo</a></p>
+<hr />
+<ul>
+<li>created: 11/16/2022</li>
+<li>latest update: 13/02/2023</li>
+<li>by: Nuri Erginer</li>
+<li>email: <a href="mailto:nerginer@gmail.com">nerginer@gmail.com</a></li>
+</ul>
+<p>Thank you for purchasing 3D Metri Code. If you have any questions that are beyond the scope of this help file, please feel free to email me. Thanks so much!</p>
+<p><br><br><br><br><br><br><br><br><br><br><br><br><br></p>
+<h1 id="overview">Overview</h1>
+<hr />
+<p>Additive manufacturing—commonly called 3D Printing—is an ideal solution for creating concept models, manufacturing tooling, functional prototypes, and even end-use parts in many cases. Online 3D printing services are used by design firms and part manufacturers for making prototypes and molds. 3D printers are sophisticated machines that use advanced technology adhering to very high-quality standards. </p>
+<p>This high-quality standards needs to be reflected to your end customers from the start. The most important part of receiving a quote is let your customers to know below information when they first come to your web site.</p>
+<ul>
+<li>What is the cost to print my STL File?</li>
+<li>What are the printing technologies you are providing?</li>
+<li>What are the material choices?</li>
+<li>What are the provided resolutions and layer heights?</li>
+<li>Do you provide finishing options for the end product?</li>
+</ul>
+<p>With 3DMetri your customers will get their answers by themselves. You will only work for the Orders not for the deals.
+<br><br><br></p>
+<h1 id="prerequisites">Prerequisites</h1>
+<hr />
+<p>The only Prerequisites for this code is a <strong>Hosting Service</strong>. It must be <strong>Amazon Web Services</strong>.. Also, you need to have a <strong>Stripe</strong> account and be ready to obtain Stripe Secret key. </p>
+<h3 id="what-is-amazon-web-services-aws">What is Amazon Web Services (AWS) ?</h3>
+<p>AWS, Inc. is a subsidiary of Amazon that provides on-demand cloud computing platforms and APIs to individuals, companies, and governments, on a metered pay-as-you-go basis. These cloud computing web services provide distributed computing processing capacity and software tools via AWS server farms.</p>
+<p>Please open up an account at AWS. https://aws.amazon.com/</p>
+<p>We will use below services for our Web App:</p>
+<p><strong>- Amazon Simple Storage Service (S3)</strong></p>
+<p>S3 is a service offered by Amazon Web Services that provides object storage through a web service interface. </p>
+<p><strong>- Amazon Serverless Computing (LAMBDA)</strong></p>
+<p>AWS Lambda is an event-driven, serverless computing platform provided by Amazon as a part of Amazon Web Services. It is a computing service that runs code in response to events and automatically manages the computing resources required by that code. </p>
+<p><strong>- Amazon Simple Email Service (SES)</strong></p>
+<p>Amazon SES is a cloud email service provider that can integrate into any application for bulk email sending. </p>
+<p>Please do not afraid. This will be a one click installation with AWS CloudFormation template. AWS CloudFormation is an infrastructure as code (IaC) service that allows you to easily model, provision, and manage AWS and third-party resources. You will receive a CloudFormation Template File with the source code and you will use it to provision all the necessary resources. Please go on the installation part of this document. 
+<br><br><br></p>
+<h1 id="installation">Installation</h1>
+<hr />
+<p><strong>Step-1</strong> </p>
+<p>Create An AWS Account. If you have one you can use it.</p>
+<p><strong>Step-2</strong></p>
+<p>After Sign in to your account, go to CloudFormation Service. You can search for this service from the search bar at the top. Click Create Stack. Select Template is ready and Upload a template file radio buttons. Click Chose File and select cloudformation.yml file which is in the SourceFiles/3DMetri/src directory Click Next. </p>
+<p><a href="https://app.guidde.co/share/playbooks/6RudNVGJ2HDMyCWtMoF2di?origin=S2JUUYO7Y3gpMSTrmdI0J2tKwL32">AWS Management Console</a></p>
+<p><a href="https://app.guidde.co/share/playbooks/6RudNVGJ2HDMyCWtMoF2di?origin=S2JUUYO7Y3gpMSTrmdI0J2tKwL32"><img alt="" src="https://firebasestorage.googleapis.com/v0/b/guidde-production.appspot.com/o/gif%2F6RudNVGJ2HDMyCWtMoF2di.gif?alt=media&amp;token=de81e1e5-5e16-4a76-9220-af2fe28cbb57" /></a></p>
+<p>Enter a Stack Name. I choose MetriFrontEnd. Set the Parameters. BucketNamePrefix is the text that will be added to the front of your bucket names as prefix (you need to choose 4 digits only). The second parameter is important - enter your email address that you want to receive the Customer Orders. Next you need to enter Stripe API Secret Key (don’t close this window).</p>
+<p>To get Stripe Secret Key please create an account on <a href="https://srtipe.com">https://srtipe.com</a> 
+After you confirmed your account and enter all the necessary information, you need to navigate to the Developer section and choose API Key or click on the link <a href="https://dashboard.stripe.com/apikeys">here</a> 
+Please copy your Secret Key and enter it in your CloudFormation in AWS (previous window with application)</p>
+<p>We will soon define this email for the AWS Simple Mail Service. Do not worry I will guide you. Click Next. Scroll to end of page with default settings and Click Next. Again Scroll to end of page and check "I acknowledge that AWS CloudFormation might create IAM resources with custom names." Click Submit.</p>
+<p>The CloudFormation will build and connect every resources we need. Please wait until you see the CREATE_COMPLETE message for the all stack resources.</p>
+<p><a href="https://app.guidde.co/share/playbooks/pGB4gmnLA9MuJzAfP4As4F?origin=S2JUUYO7Y3gpMSTrmdI0J2tKwL32">CloudFormation - Stack</a></p>
+<p><a href="https://app.guidde.co/share/playbooks/pGB4gmnLA9MuJzAfP4As4F?origin=S2JUUYO7Y3gpMSTrmdI0J2tKwL32"><img alt="" src="https://firebasestorage.googleapis.com/v0/b/guidde-production.appspot.com/o/gif%2FpGB4gmnLA9MuJzAfP4As4F.gif?alt=media&amp;token=2af09393-6b17-4afe-b847-29bed255d4f6" /></a></p>
+<p><strong>Step-3</strong></p>
+<p>Go to Simple email service. You know how to do that just write to the top search bar as SES and click simple email service. Click Create identity. Chose email address and enter the same email address you write at Step2. Click Create identity.</p>
+<p><a href="https://app.guidde.co/share/playbooks/6zVUNcTDCkVsDKXJXUXKhh?origin=S2JUUYO7Y3gpMSTrmdI0J2tKwL32">CloudFormation - Stack MetriFrontEnd</a></p>
+<p><a href="https://app.guidde.co/share/playbooks/6zVUNcTDCkVsDKXJXUXKhh?origin=S2JUUYO7Y3gpMSTrmdI0J2tKwL32"><img alt="" src="https://firebasestorage.googleapis.com/v0/b/guidde-production.appspot.com/o/gif%2F6zVUNcTDCkVsDKXJXUXKhh.gif?alt=media&amp;token=d24c7f53-475b-4225-a4f7-a075bce861b1" /></a></p>
+<p>You will see that Verification is pending on the next screen. You will receive an email from amazon to verify the email address you entered. Open the email and click the link to verify your email address.</p>
+<p><strong>Step-4</strong></p>
+<p>We are almost done.  We will write down to function addresses on the index.html page.</p>
+<p>These are AWS Lambda function addresses. Go to the search bar, write Lambda, and click on the Lambda Service. </p>
+<p>You will see three functions testGetSignedURL, testsendSESEmail and createStripePaymentLink. </p>
+<p>Test is the prefix it can be something else in your situation. Click on the GetSignedURL function. </p>
+<p>You will see the Function URL on the right-hand side. It is a link address. </p>
+<p>Copy it and open index.html in the SourceFiles/3DMetri/dist
+you will see three config options VUE_APP_BASE_SES_LAMBDA_URL, VUE_APP_BASE_GET_SIGNED_URL and VUE_APP_BASE_CREATE_STRIPE_PAYMENT_LINK_URL under window.Metri_Config option.</p>
+<p>Set these parameters with the appropriate function url address. They may look like this:</p>
+<p>VUE_APP_BASE_SES_LAMBDA_URL:'https://fpzm4mm4h5ztklv4sozdesk2vbm0nbswd.lambda-url.us-east-1.on.aws/',</p>
+<p>VUE_APP_BASE_GET_SIGNED_URL:'https://l3oa4mtr6eerb2f7sdvkflwzfl40kdlho.lambda-url.us-east-1.on.aws/',</p>
+<p>VUE_APP_BASE_CREATE_STRIPE_PAYMENT_LINK_URL:'https://l3oa4mtrpzm4mm4h5ztflwzfl40kdlho.lambda-url.us-east-1.on.aws/'</p>
+<p>Set VUE_APP_BASE_SES_LAMBDA_URL to testsendSESEmail function url address, </p>
+<p>Set VUE_APP_BASE_GET_SIGNED_URL to testGetSignedURL function url address and </p>
+<p>VUE_APP_BASE_SES_LAMBDA_URL to createStripePaymentLink function url address.</p>
+<p>With this, the front-end will know the address of the functions that it needs. Save the index.hml file.</p>
+<p><strong>Step-5</strong></p>
+<p>In this final step go to S3 Service by writing S3 to the search bar and click it. </p>
+<p>You will see your buckets. Click test-3dmetri bucket. </p>
+<p>If you write an other prefix your bucket name will look like prefix-3dmetri Click and enter inside the bucket.</p>
+<p>Upload all the files in the SourceFiles/3DMetri/dist directory to this bucket. </p>
+<p>Select all the files in the directory and drug and drop to on the browser. </p>
+<p>Or you can click the upload button and then select all the files. </p>
+<p>This bucket will be your web site address. To find out the web address for this setup click the properties tab of this bucket and scroll down to the page. You will find a web link at the end in the Static website hosting section. </p>
+<p>You can assign a custom domain to this link.
+<br><br><br></p>
+<h1 id="customization">Customization</h1>
+<hr />
+<p>We set up our Web Site, and It is time to customize the app in order to reflect our services.</p>
+<p>You can do this by editing the mydata.json file. This file is in your public directory. In this file are your printers or printing technologies, your materials, and other information that you will serve to your customers. </p>
+<p>The file structure is as below.</p>
+<pre><code>Printers
+
+    materials
+
+    colors
+
+    infills
+
+    layer\_heights
+
+    finishings
+
+    setup\_costs
+</code></pre>
+<p>You will edit this file according with your 3D printing capability, Materials and Finishing options.</p>
+<p>Do not break the json file. Editing this file with an online JSON editor and validator is recommended. </p>
+<p>Please check the JSON file validity before uploading it to the system.</p>
+<p><br><br><br></p>
+<h1 id="example-of-an-order-email">Example of an Order Email</h1>
+<p><br>
+Please find an example email that you will receive every time a customer upload files to get service. You will find the stl file in your s3 bucket. After your examination and 3d printing compliance check you can send the below payment link to your customer. Stripe site will handle the secure payment transactions and Tax issues. Stripe also get your customers shipping address. After you receive your money you can Print the object and send to your customers address.</p>
+<pre><code>    customerName:   Jhon Doe
+    customerEmail:  jhon@gmail.com
+    customerPhone:  2343423445
+    cartTotal:      281.70
+    paymentLink:    https://buy.stripe.com/test_cN2g2oegk78OcxOeV1
+
+    File Name   Handle.stl
+    Price       281.70
+    Quantity    1
+    Printer     HP Jet Fusion 3D 4210 Printer
+    Material    HP 3D High Reusability PA 12
+    Color       Dyed Black
+    Infill      Ultra Light
+    LayerHeight Normal
+    Finishing   Polishing
+    unit        mm
+</code></pre>
+<p><br><br><br></p>
+<h1 id="faq">FAQ</h1>
+<hr />
+<h3 id="who-is-this-html-web-app-for">Who is this HTML Web APP for?</h3>
+<p><br>
+This HTML Web APP is for On-Demand Manufacturing platforms like 3D Printing service providers. If you are a 3D Printing service provider and want to response your customers with an instance quoting engine, You are in the correct place.
+<br><br></p>
+<h3 id="why-it-is-important-have-an-instance-quoting-engine">Why it is important have an instance quoting engine?</h3>
+<p><br>
+Quoting potential new clients can be a pain. Depending on the services you offer, your sales team may be spending too much time on customized quotes, only to lose the deal when all is said and done.</p>
+<p>There are lots of customers who is getting the quote but not order at the end.</p>
+<p>Quoting software handles the process of calculating, creating, and managing all the quotes for your professional service business. Rather than listing these out on an Excel spreadsheet, with quoting software tools, you can easily input your data and generate accurate quotes quickly.</p>
+<p>Quick and efficient is the name of the game when delivering a quote to potential new businesses. Closing a deal and winning a project is often a matter of precious time. Sometimes the firm to submit its quote the fastest will win the job, regardless of whether or not a competitor is a better choice. </p>
+<p>Time is money, and delivering quotes quickly and professionally is a good look for any professional service business.</p></div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script>
+            var base_url = ".",
+                shortcuts = {"search": 83, "next": 78, "help": 191, "previous": 80};
+        </script>
+        <script src="js/base.js" defer></script>
+
+        <div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="Keyboard Shortcuts Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Keyboard Shortcuts</h4>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>
+
+<!--
+MkDocs version : 1.0.4
+Build Date UTC : 2023-02-13 10:59:10
+-->

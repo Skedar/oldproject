@@ -1,0 +1,321 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "Generates recourses for 3dmetri fronend"
+Parameters:
+    OrderEmail:
+        Type: String
+        Default: nerginer@gmail.com
+        AllowedPattern: '[^@]+@[^@]+\.[^@]+'
+        Description: Please enter your email address that you want to receive the orders
+    BucketNamePrefix:
+        Type: String
+        Default: test
+        MaxLength: 4
+        Description: This will be a prefix for your bucket names (4 chars max)
+    stripeSecretKey:
+        Type: String
+        Description: Please enter your Stripe Secret Key
+
+Resources:
+    S3Bucket:
+        Type: "AWS::S3::Bucket"
+        Properties:
+            BucketName: !Sub "${BucketNamePrefix}-3dmetri"
+            PublicAccessBlockConfiguration:
+                BlockPublicAcls: false
+                BlockPublicPolicy: false
+                IgnorePublicAcls: false
+                RestrictPublicBuckets: false
+            WebsiteConfiguration: 
+                IndexDocument: "index.html"
+                ErrorDocument: "index.html"
+
+    S3Bucket2:
+        Type: "AWS::S3::Bucket"
+        Properties:
+            BucketName: !Sub "${BucketNamePrefix}-stl-depo"
+            PublicAccessBlockConfiguration:
+                BlockPublicAcls: false
+                BlockPublicPolicy: false
+                IgnorePublicAcls: false
+                RestrictPublicBuckets: false
+            CorsConfiguration: 
+                CorsRules: 
+                  - 
+                    AllowedHeaders: 
+                      - "*"
+                    AllowedMethods: 
+                      - "PUT"
+                      - "POST"
+                      - "GET"
+                      - "DELETE"
+                    AllowedOrigins: 
+                      - "*"
+
+    S3BucketPolicy:
+        Type: "AWS::S3::BucketPolicy"
+        Properties:
+            Bucket: !Ref S3Bucket
+            PolicyDocument: 
+                Version: "2012-10-17"
+                Id: "Policy1568691946888"
+                Statement: 
+                  - 
+                    Sid: "Stmt1568691936002"
+                    Effect: "Allow"
+                    Principal: "*"
+                    Action: "s3:*"
+                    Resource: !Sub "arn:aws:s3:::${S3Bucket}/*"
+
+    LambdaFunction:
+        Type: "AWS::Lambda::Function"
+        Properties:
+            Description: ""
+            FunctionName: "testsendSESEmail"
+            Handler: "index.handler"
+            Environment:
+                Variables:
+                    OrderEmail: !Ref OrderEmail
+            Architectures: 
+              - "x86_64"
+            Code: 
+                ZipFile: |
+                    const aws = require('aws-sdk');
+                    const ses = new aws.SES({region: 'us-east-1'});
+                    const OrderEmail = process.env.OrderEmail;
+                    exports.handler = (event, context, callback) => {              
+                    const body = JSON.stringify(event.body)         
+                    const email = 'noreply@3dmetri.com'
+                    const subject = 'You have a new order'
+                    const message = body
+                    sendMail(subject, message, email, callback);
+                    };
+                    async function sendMail(subject, message, email, callback) {
+                    const emailParams = {
+                            Destination: {
+                            ToAddresses: [`${OrderEmail}`]
+                            },
+                            Message: {
+                            Body: {
+                                Text: {
+                                    Data: `text sample`
+                                },
+                                Html: {
+                                    Data: message
+                                }
+                            },
+                            Subject: { Data: subject },
+                            },
+                            ReplyToAddresses: [email],
+                            Source: `${OrderEmail}`,
+                    };
+                    try {
+                            let key = await ses.sendEmail(emailParams).promise();
+                            callback(null, {result: "Success"})
+                    } catch (e) {
+                            callback(null, {result: `Failure: ${e}`})
+                        }  
+                    return;
+                    }
+            MemorySize: 128
+            Role: !GetAtt IAMRole.Arn
+            Runtime: "nodejs16.x"
+            Timeout: 3
+            TracingConfig: 
+                Mode: "PassThrough"
+            EphemeralStorage: 
+                Size: 512
+
+    LambdaFunction2:
+        Type: "AWS::Lambda::Function"
+        Properties:
+            Description: ""
+            FunctionName: "testGetSignedURL"
+            Handler: "index.handler"
+            Architectures: 
+              - "x86_64"
+            Environment:
+                Variables:
+                    BucketNamePrefix: !Ref BucketNamePrefix
+            Code: 
+                ZipFile: |
+                    'use strict';
+                    const AWS = require('aws-sdk');
+                    const s3 = new AWS.S3({signatureVersion: 'v4'});
+                    const BucketNamePrefix = process.env.BucketNamePrefix;
+                    exports.handler = (event, context, callback) => {
+                    let data = event['body'];              
+                    let filename = JSON.parse(data).object_key;
+                    const bucket = `${BucketNamePrefix}-stl-depo`;
+                    if (!bucket) {
+                        callback(new Error(`S3 bucket not set`));
+                    }
+                    const key = event['body'];
+                    if (!key) {
+                        callback(new Error('S3 object key missing'));
+                        return;
+                    }
+                    const params = {'Bucket': bucket, 'Key': filename};
+                    s3.getSignedUrl('putObject', params, (error, url) => {
+                        if (error) {
+                        callback(error);
+                        } else {
+                        callback(null, {url: url});
+                        }
+                    });
+                    };
+            MemorySize: 128
+            Role: !GetAtt IAMRole.Arn
+            Runtime: "nodejs16.x"
+            Timeout: 3
+            TracingConfig: 
+                Mode: "PassThrough"
+            EphemeralStorage: 
+                Size: 512
+
+    LambdaFunction3:
+        Type: "AWS::Lambda::Function"
+        Properties:
+            Description: ""
+            FunctionName: "createStripePaymentLink"
+            Handler: "index.handler"
+            Environment:
+                Variables:
+                    stripeSecretKey: !Ref stripeSecretKey
+            Architectures: 
+              - "x86_64"
+            Code: 
+                S3Bucket: 3dmetri-lambda-code-deploy-bucket-silme
+                S3Key: Archive.zip
+            MemorySize: 128
+            Role: !GetAtt IAMRole.Arn
+            Runtime: "nodejs16.x"
+            Timeout: 3
+            TracingConfig: 
+                Mode: "PassThrough"
+            EphemeralStorage: 
+                Size: 512
+
+
+    LambdaPermission:
+        Type: "AWS::Lambda::Permission"
+        Properties:
+            Action: "lambda:InvokeFunctionUrl"
+            FunctionName: !GetAtt LambdaFunction.Arn
+            FunctionUrlAuthType: NONE
+            Principal: "*"
+
+
+    LambdaPermission2:
+        Type: "AWS::Lambda::Permission"
+        Properties:
+            Action: "lambda:InvokeFunctionUrl"
+            FunctionName: !GetAtt LambdaFunction2.Arn
+            FunctionUrlAuthType: NONE
+            Principal: "*"
+    
+    LambdaPermission3:
+        Type: "AWS::Lambda::Permission"
+        Properties:
+            Action: "lambda:InvokeFunctionUrl"
+            FunctionName: !GetAtt LambdaFunction3.Arn
+            FunctionUrlAuthType: NONE
+            Principal: "*"
+    
+    LambdaFunctionUrl:
+        Type: AWS::Lambda::Url
+        Properties: 
+            AuthType: NONE
+            Cors: 
+                AllowCredentials: True
+                AllowHeaders: 
+                    - "*"
+                AllowMethods: 
+                    - "*"
+                AllowOrigins: 
+                    - "*"
+                MaxAge: 30000
+            TargetFunctionArn: !GetAtt LambdaFunction.Arn
+    
+    LambdaFunctionUrl2:
+        Type: AWS::Lambda::Url
+        Properties: 
+            AuthType: NONE
+            Cors: 
+                AllowCredentials: True
+                AllowHeaders: 
+                    - "*"
+                AllowMethods: 
+                    - "*"
+                AllowOrigins: 
+                    - "*"
+                MaxAge: 30000
+            TargetFunctionArn: !GetAtt LambdaFunction2.Arn
+
+    LambdaFunctionUrl3:
+        Type: AWS::Lambda::Url
+        Properties: 
+            AuthType: NONE
+            Cors: 
+                AllowCredentials: True
+                AllowHeaders: 
+                    - "*"
+                AllowMethods: 
+                    - "*"
+                AllowOrigins: 
+                    - "*"
+                MaxAge: 30000
+            TargetFunctionArn: !GetAtt LambdaFunction3.Arn
+    
+    IAMRole:
+        Type: "AWS::IAM::Role"
+        Properties:
+            Path: "/service-role/"
+            RoleName: "TestNuriLambdaRole"
+            AssumeRolePolicyDocument: "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"lambda.amazonaws.com\"},\"Action\":\"sts:AssumeRole\"}]}"
+            MaxSessionDuration: 3600
+            ManagedPolicyArns: 
+              - "arn:aws:iam::aws:policy/AWSLambdaExecute"
+              - "arn:aws:iam::aws:policy/CloudWatchFullAccess"
+              - "arn:aws:iam::aws:policy/service-role/AWSLambdaRole"
+              - !Ref IAMManagedPolicy
+              - !Ref IAMManagedPolicy2
+
+    IAMManagedPolicy:
+        Type: "AWS::IAM::ManagedPolicy"
+        Properties:
+            ManagedPolicyName: "TestSesLambdaNuri"
+            Path: "/"
+            PolicyDocument: |
+                {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Action": [
+                                "ses:SendEmail",
+                                "ses:SendRawEmail"
+                            ],
+                            "Resource": "*"
+                        }
+                    ]
+                }
+    
+    IAMManagedPolicy2:
+        Type: "AWS::IAM::ManagedPolicy"
+        Properties:
+            ManagedPolicyName: "TestNuriS3ALlPolicy"
+            Path: "/"
+            PolicyDocument: |
+                {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Sid": "VisualEditor0",
+                            "Effect": "Allow",
+                            "Action": "s3:*",
+                            "Resource": "*"
+                        }
+                    ]
+                }
+
+
